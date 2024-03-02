@@ -52,8 +52,8 @@ $themesJSON = "$bdDatafolder\$Release\themes.json"
 
 function launchClient {
         Write-Host "Launching Discord $Script:releaseTitle...."
-       & "$appVer\$Script:execName.exe" 
-       # I want to close the window but discord opens a pipe for its log and it throws a fit if i redirect it...
+       Start-Process cmd.exe -ArgumentList " /C Start $Script:appVer\$Script:execName.exe" -WindowStyle Hidden
+       # wrapping cmd is funny but it works how i need it to
         Write-Host "Exiting in 5 seconds..."
         Start-Sleep 5
         exit 0
