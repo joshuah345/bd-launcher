@@ -52,7 +52,8 @@ $themesJSON = "$bdDatafolder\$Release\themes.json"
 
 function launchClient {
         Write-Host "Launching Discord $Script:releaseTitle...."
-       & {"$appVer\$Script:execName.exe" }
+       & "$appVer\$Script:execName.exe" 
+       # I want to close the window but discord opens a pipe for its log and it throws a fit if i redirect it...
         Write-Host "Exiting in 5 seconds..."
         Start-Sleep 5
         exit 0
