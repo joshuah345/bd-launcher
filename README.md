@@ -2,9 +2,9 @@
 ### A script to install and (re)launch Discord on Windows
 
 
-## Usage
-
-```bdlauncher.ps1 [{-Install|-Repair|-Uninject|-Status}] [-Release {stable|ptb|canary}] [-DiscordPath <path>] [-skipDownload] [-LaunchDiscord]
+## Usage (Command Line)
+```
+bdlauncher.ps1 [{-Install|-Repair|-Uninject|-Status}] [-Release {stable|ptb|canary}] [-DiscordPath <path>] [-skipDownload] [-LaunchDiscord]
 ```
 
 #### `-Install`
@@ -35,8 +35,8 @@ Skips downloading `betterdiscord.asar` if one already exists.
 #### `-LaunchDiscord`
 Launches the appropriate Discord release after the command completes.
 
-### Usage (Recommended)
+## Usage (Recommended)
 
 1. Create a Shortcut with \path\to\bdlauncher.ps1 and your desired arguments.
-2. add `-LaunchDiscord` as an argument for it to always launch Discord.
+2. Add `-LaunchDiscord` as an argument for it to always launch Discord.
 3. Add to Start Menu or your desktop for your convenience.
