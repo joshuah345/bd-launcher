@@ -1,6 +1,5 @@
 # BDLauncher
-### A script to install and (re)launch Discord on Windows
-
+### A script to install and (re)launch (Better)Discord on Windows
 
 ## Usage (Command Line)
 ```
@@ -37,6 +36,7 @@ Launches the appropriate Discord release after the command completes.
 
 ## Usage (Recommended)
 
-1. Create a Shortcut with \path\to\bdlauncher.ps1 and your desired arguments.
+1. Create a Shortcut with the target being `'\C:\Program Files\PowerShell\7\PowerShell.exe' \path\to\bdlauncher.ps1` and your desired arguments.
+- Note that Windows includes legacy versions of PowerShell that this script will fail to run in. The `powershell`command points to version 1 at the time of writing.
 2. Add `-LaunchDiscord` as an argument for it to always launch Discord.
 3. Add to Start Menu or your desktop for your convenience.
