@@ -213,6 +213,7 @@ if ($Script:Repair) {
 
 if ($Script:Uninject) {
     uninjectBD
+    cordCutter
 }
 
 if ($Script:Install) {
