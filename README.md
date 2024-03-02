@@ -37,6 +37,6 @@ Launches the appropriate Discord release after the command completes.
 ## Usage (Recommended)
 
 1. Create a Shortcut with the target being `"C:\Program Files\PowerShell\7\pwsh.exe" \path\to\bdlauncher.ps1` and your desired arguments.
-- Note that Windows includes legacy versions of PowerShell that this script will fail to run in. The `powershell` command points to version 1 at the time of writing.
+- Note that Windows includes legacy versions of PowerShell that this script will fail to run in. The `powershell` command points to version 1 at the time of writing.Older versions of Windows may have Version 6 instead of 7, so change the number in the target depending on what's present in the folder.
 2. Add `-LaunchDiscord` as an argument for it to always launch Discord.
 3. Add to Start Menu or your desktop for your convenience.
