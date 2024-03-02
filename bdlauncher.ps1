@@ -52,7 +52,7 @@ $themesJSON = "$bdDatafolder\$Release\themes.json"
 
 function launchClient {
         Write-Host "Launching Discord $Script:releaseTitle...."
-        Start-Process -FilePath "$appVer\$Script:execName.exe" -UseNewEnvironment 
+       & {"$appVer\$Script:execName.exe" }
         Write-Host "Exiting in 5 seconds..."
         Start-Sleep 5
         exit 0
