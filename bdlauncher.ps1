@@ -1,12 +1,31 @@
+[CmdletBinding(DefaultParameterSetName = 'AutoMode')]
+
 param (
     [switch]$LaunchDiscord = $false,
+    [switch]$skipDownload = $false,
+    #[string]$Release = "",
+    [Parameter(ParameterSetName = 'AutoMode')]
+    [Parameter(ParameterSetName = 'Uninject')]
     [switch]$Uninject = $false,
+
+    [Parameter(ParameterSetName = 'AutoMode')]
+    [Parameter(ParameterSetName = 'InstallMode')]
     [switch]$Install = $false,
+
+    [Parameter(ParameterSetName = 'AutoMode')]
+    [Parameter(ParameterSetName = 'RepairMode')]
     [switch]$Repair = $false,
-    [string]$Release = "",
-    [string]$DiscordPath = "",
+
+    [Parameter(ParameterSetName = 'AutoMode')]
+    [Parameter(ParameterSetName = 'StatusMode')]
     [switch]$Status = $false,
-    [switch]$skipDownload = $false
+
+    [Parameter(ParameterSetName = 'ManualMode')]
+    [string]$DiscordPath = "",
+
+    [Parameter(ParameterSetName = 'ManualMode', Mandatory = $true)]
+    [Parameter(ParameterSetName = 'AutoMode')]
+    [string]$Release
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,7 +38,7 @@ $foldersList = "$bdFolder", "$bdDataFolder", "$bdPluginsFolder", "$bdThemesFolde
 
 function setDiscordPath {
 
-    if ($script:Release) {
+    if ($Script:Release) {
         switch ($Script:Release) {
             stable { $script:DiscordPath = "$Env:LOCALAPPDATA\Discord" } 
             ptb { $script:DiscordPath = "$Env:LOCALAPPDATA\DiscordPTB" } 
@@ -33,8 +52,8 @@ function setDiscordPath {
     } 
     else {
         Write-Host -ForegroundColor Yellow "Defaulting to 'stable' as -Release was not set."
-        $script:DiscordPath = "$Env:LOCALAPPDATA\Discord" 
-        $script:Release = "stable" 
+        $Script:DiscordPath = "$Env:LOCALAPPDATA\Discord" 
+        $Script:Release = "stable" 
     }   
     switch ($Script:Release) {
         stable { $Script:execName = "Discord" } 
@@ -42,21 +61,20 @@ function setDiscordPath {
         canary { $Script:execName = "DiscordCanary" } 
         default { Write-Error "Invalid Discord version. Expected values are 'stable', 'ptb' and 'canary'"; exit 1 }
     }   
-   
+    $Script:releaseTitle = (Get-Culture).TextInfo.ToTitleCase($Script:Release)
 }
 
-$releaseTitle = (Get-Culture).TextInfo.ToTitleCase($Script:Release)
 
 $pluginsJSON = "$bdDatafolder\$Release\plugins.json"
 $themesJSON = "$bdDatafolder\$Release\themes.json"
 
 function launchClient {
-        Write-Host "Launching Discord $Script:releaseTitle...."
-       Start-Process cmd.exe -ArgumentList " /C Start $Script:appVer\$Script:execName.exe" -WindowStyle Hidden
-       # wrapping cmd is funny but it works how i need it to
-        Write-Host "Exiting in 5 seconds..."
-        Start-Sleep 5
-        exit 0
+    Write-Host "Launching Discord $Script:releaseTitle...."
+    Start-Process cmd.exe -ArgumentList " /C Start $Script:appVer\$Script:execName.exe" -WindowStyle Hidden
+    # wrapping cmd is funny but it works how i need it to
+    Write-Host "Exiting in 5 seconds..."
+    Start-Sleep 5
+    exit 0
 }
 
 function cordCutter {
@@ -85,7 +103,7 @@ function installBD {
     }
 
     if ($script:Install -or $Script:Repair) {
-        if (!($Script:skipDownload)){
+        if (!($Script:skipDownload)) {
             downloadBD
         } 
         elseif (($Script:skipDownload) -and (Test-Path -Path "$bdDataFolder\betterdiscord.asar")) {
@@ -183,47 +201,34 @@ function uninjectBD {
     Set-Content -Path $indexFile -Value "module.exports = require(`".`/core.asar`");"
     checkInstall
 }
-function onlyOneSwitch {
-    [array]$Local:SwitchConflict = [bool]$Script:Install, [bool]$Script:Status,[bool]$Script:Uninject,[bool]$Script:Repair
-
-    $enabledSwitchCount = 0
-    for ($index = 0; $index -lt $Local:SwitchConflict.count; $index++) {
-        $enabledSwitchCount = $enabledSwitchCount + $Local:SwitchConflict[$index]
-    }
-
-    if ($enabledSwitchCount -ge 2) {
-        Write-Error "Arguments -Install, -Repair, -Uninject and -Status cannot be combined."   
-    }
-}
 function mainLogic {
     
-onlyOneSwitch
-setDiscordPath
-latestAppVersion
+    setDiscordPath
+    latestAppVersion
 
-Write-Host -ForegroundColor Yellow "Using $DiscordPath as Discord directory." 
+    Write-Host -ForegroundColor Yellow "Using $DiscordPath as Discord directory." 
 
-if ($Script:Status) {
-    checkInstall
-}
+    if ($Script:Status) {
+        checkInstall
+    }
 
-if ($Script:Repair) {
-    repairBD
-    checkInstall
-}
+    if ($Script:Repair) {
+        repairBD
+        checkInstall
+    }
 
-if ($Script:Uninject) {
-    uninjectBD
-    cordCutter
-}
+    if ($Script:Uninject) {
+        uninjectBD
+        cordCutter
+    }
 
-if ($Script:Install) {
-    installBD
-}
+    if ($Script:Install) {
+        installBD
+    }
 
-if ($Script:LaunchDiscord) {
-    launchClient
-}
+    if ($Script:LaunchDiscord) {
+        launchClient
+    }
 
 }
 
